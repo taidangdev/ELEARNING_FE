@@ -1,8 +1,31 @@
-import { getDanhSachKhoaHoc } from "./services/quanglykhoahoc";
+import Link from "next/link";
+import { Suspense } from "react";
+import {
+  getDanhSachKhoaHoc,
+  getDanhMucKhoaHoc,
+  getKhoaHocTheoDanhMuc,
+} from "./services/quanglykhoahoc";
 import SafeImage from "./services/components/SafeImage";
+import CategoryMenu from "./services/components/CategoryMenu";
 
-export default async function Page() {
-  const data = await getDanhSachKhoaHoc();
+interface PageProps {
+  searchParams: Promise<{
+    category?: string;
+  }>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
+  const { category } = await searchParams;
+
+  // Gọi song song danh mục và danh sách khóa học
+  const [categories, courses] = await Promise.all([
+    getDanhMucKhoaHoc(),
+    category
+      ? getKhoaHocTheoDanhMuc(category)
+      : getDanhSachKhoaHoc(),
+  ]);
+
+  const data = courses;
 
   return (
     <>
@@ -56,9 +79,17 @@ export default async function Page() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-7 max-w-[1700px] mx-auto">
-          {Array.isArray(data) &&
-            data.map((item: any) => (
+        {/* Category Menu */}
+        <div className="max-w-[1700px] mx-auto mb-8">
+          <Suspense fallback={<div className="flex justify-center">Đang tải danh mục...</div>}>
+            <CategoryMenu categories={categories} />
+          </Suspense>
+        </div>
+
+        {/* Course Grid */}
+        {Array.isArray(data) && data.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-7 max-w-[1700px] mx-auto">
+            {data.map((item: any) => (
               <div
                 key={item.maKhoaHoc}
                 className="group bg-white rounded-2xl overflow-hidden shadow-md
@@ -91,38 +122,40 @@ export default async function Page() {
                     {item.moTa}
                   </p>
 
-                  <div className="space-y-1">
-                    <p>
-                      📌 <b>Mã:</b> {item.maKhoaHoc || "Đang cập nhật"}
-                    </p>
-                    <p>
-                      👀 <b>Lượt xem:</b> {item.luotXem ?? 0}
-                    </p>
-                    <p>
-                      👨‍🎓 <b>Học viên:</b> {item.soLuongHocVien ?? 0}
-                    </p>
-                    <p>
-                      📅 <b>Ngày tạo:</b> {item.ngayTao || "Chưa có"}
-                    </p>
-                    <p>
-                      👤 <b>Người tạo:</b>{" "}
-                      {item.nguoiTao?.hoTen || "Chưa cập nhật"}
-                    </p>
-                    <p className="text-indigo-600 font-semibold">
-                      📂 {item.danhMucKhoaHoc?.tenDanhMucKhoaHoc}
-                    </p>
-                  </div>
-
-                  <button
+                  <Link
+                    href={`/course/${item.maKhoaHoc}`}
                     className="mt-auto py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 
-             text-white text-sm font-semibold hover:brightness-110 transition"
+                    text-white text-sm font-semibold hover:brightness-110 transition text-center"
                   >
                     Xem chi tiết
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
-        </div>
+          </div>
+        ) : (
+          <div className="max-w-[1700px] mx-auto">
+            <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+              <div className="text-6xl mb-4">🔍</div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                Không tìm thấy khóa học
+              </h2>
+              <p className="text-gray-600 mb-6">
+                {category
+                  ? "Không có khóa học nào trong danh mục này."
+                  : "Hiện tại chưa có khóa học nào."}
+              </p>
+              {category && (
+                <Link
+                  href="/"
+                  className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                >
+                  Xem tất cả khóa học
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </main>
     </>
   );
