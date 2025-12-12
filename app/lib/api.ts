@@ -10,3 +10,20 @@ export const api = axios.create({
     TokenCybersoft: process.env.NEXT_PUBLIC_CYBERSOFT_TOKEN,
   },
 });
+
+if (typeof window !== "undefined") {
+  api.interceptors.request.use((config) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        if (!config.headers) {
+          config.headers = {};
+        }
+        (config.headers as any).Authorization = `Bearer ${token}`;
+      }
+    } catch {
+      // ignore
+    }
+    return config;
+  });
+}

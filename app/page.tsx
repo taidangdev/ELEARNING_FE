@@ -15,7 +15,8 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  const { category } = await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const category = resolvedSearchParams?.category;
 
   // Gọi song song danh mục và danh sách khóa học
   const [categories, courses] = await Promise.all([
@@ -25,49 +26,17 @@ export default async function Page({ searchParams }: PageProps) {
       : getDanhSachKhoaHoc(),
   ]);
 
-  const data = courses;
+  // Filter các khóa học không có maKhoaHoc hợp lệ
+  const data = Array.isArray(courses)
+    ? courses.filter((item: any) => {
+        const maKhoaHoc = item?.maKhoaHoc;
+        // Kiểm tra maKhoaHoc tồn tại, không phải null/undefined và không phải empty string
+        return maKhoaHoc != null && String(maKhoaHoc).trim() !== "";
+      })
+    : [];
 
   return (
     <>
-      {/* NAVIGATION */}
-      <nav className="w-full fixed top-0 left-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
-          {/* Logo */}
-          <h1 className="text-2xl font-extrabold text-indigo-700">
-            🎓 EduCenter
-          </h1>
-
-          {/* Menu */}
-          <ul className="hidden md:flex gap-8 text-gray-700 font-medium">
-            <li className="hover:text-indigo-600 transition cursor-pointer">
-              Trang chủ
-            </li>
-            <li className="hover:text-indigo-600 transition cursor-pointer">
-              Khóa học
-            </li>
-            <li className="hover:text-indigo-600 transition cursor-pointer">
-              Giảng viên
-            </li>
-            <li className="hover:text-indigo-600 transition cursor-pointer">
-              Liên hệ
-            </li>
-          </ul>
-
-          {/* Button đăng nhập */}
-          <button
-            className="hidden md:block bg-indigo-600 text-white px-4 py-2 rounded-lg 
-                       font-semibold hover:bg-indigo-700 transition"
-          >
-            Đăng nhập
-          </button>
-
-          {/* Mobile Menu Icon */}
-          <div className="md:hidden text-2xl cursor-pointer text-indigo-700">
-            ☰
-          </div>
-        </div>
-      </nav>
-
       {/* MAIN CONTENT */}
       <main className="pt-28 min-h-screen bg-gradient-to-br from-slate-100 to-indigo-100 px-6 py-12">
         <div className="text-center mb-14">

@@ -43,21 +43,18 @@ export async function getKhoaHocTheoDanhMuc(maDanhMuc: string) {
     return res.data;
   } catch (error: any) {
     console.error("Lỗi lấy khóa học theo danh mục:", error);
-    // Nếu API không tồn tại, filter từ danh sách tất cả khóa học
-    if (error.response?.status === 404) {
-      try {
-        const allCourses = await getDanhSachKhoaHoc();
-        return Array.isArray(allCourses)
-          ? allCourses.filter(
-              (course: any) =>
-                course.danhMucKhoaHoc?.maDanhMucKhoaHoc === maDanhMuc
-            )
-          : [];
-      } catch (filterError) {
-        console.error("Lỗi filter khóa học:", filterError);
-        return [];
-      }
+    // Nếu API lỗi (404, 400, ...), filter từ danh sách tất cả khóa học
+    try {
+      const allCourses = await getDanhSachKhoaHoc();
+      return Array.isArray(allCourses)
+        ? allCourses.filter(
+            (course: any) =>
+              course.danhMucKhoaHoc?.maDanhMucKhoaHoc === maDanhMuc
+          )
+        : [];
+    } catch (filterError) {
+      console.error("Lỗi filter khóa học:", filterError);
+      return [];
     }
-    return [];
   }
 }
