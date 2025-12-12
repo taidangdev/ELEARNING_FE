@@ -12,8 +12,12 @@ export default function SafeImage({ src, alt, className }: Props) {
       src={src}
       alt={alt}
       className={className}
+      suppressHydrationWarning
       onError={(e) => {
-        e.currentTarget.src = "/default-course.jpg";
+        const target = e.currentTarget;
+        if (!target.src.includes("default-course.jpg")) {
+          target.src = "/default-course.jpg";
+        }
       }}
     />
   );
