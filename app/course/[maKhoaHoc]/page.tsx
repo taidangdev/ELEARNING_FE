@@ -16,18 +16,6 @@ export default async function CourseDetailPage({ params }: PageProps) {
   if (!course) {
     return (
       <>
-        {/* NAVIGATION */}
-        <nav className="w-full fixed top-0 left-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
-          <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="text-2xl font-extrabold text-indigo-700">
-              🎓 EduCenter
-            </Link>
-            <div className="md:hidden text-2xl cursor-pointer text-indigo-700">
-              ☰
-            </div>
-          </div>
-        </nav>
-
         <main className="pt-28 min-h-screen bg-gradient-to-br from-slate-100 to-indigo-100 px-6 py-12">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl font-bold text-gray-800 mb-4">
@@ -50,45 +38,6 @@ export default async function CourseDetailPage({ params }: PageProps) {
 
   return (
     <>
-      {/* NAVIGATION */}
-      <nav className="w-full fixed top-0 left-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="text-2xl font-extrabold text-indigo-700">
-            🎓 EduCenter
-          </Link>
-
-          {/* Menu */}
-          <ul className="hidden md:flex gap-8 text-gray-700 font-medium">
-            <li className="hover:text-indigo-600 transition cursor-pointer">
-              Trang chủ
-            </li>
-            <li className="hover:text-indigo-600 transition cursor-pointer">
-              Khóa học
-            </li>
-            <li className="hover:text-indigo-600 transition cursor-pointer">
-              Giảng viên
-            </li>
-            <li className="hover:text-indigo-600 transition cursor-pointer">
-              Liên hệ
-            </li>
-          </ul>
-
-          {/* Button đăng nhập */}
-          <button
-            className="hidden md:block bg-indigo-600 text-white px-4 py-2 rounded-lg 
-                       font-semibold hover:bg-indigo-700 transition"
-          >
-            Đăng nhập
-          </button>
-
-          {/* Mobile Menu Icon */}
-          <div className="md:hidden text-2xl cursor-pointer text-indigo-700">
-            ☰
-          </div>
-        </div>
-      </nav>
-
       {/* MAIN CONTENT */}
       <main className="pt-28 min-h-screen bg-gradient-to-br from-slate-100 to-indigo-100">
         <div className="max-w-7xl mx-auto px-6 py-12">
