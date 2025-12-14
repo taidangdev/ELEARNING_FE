@@ -17,7 +17,7 @@ if (typeof window !== "undefined") {
       const token = localStorage.getItem("accessToken");
       if (token) {
         if (!config.headers) {
-          config.headers = {};
+          config.headers = (config.headers || {}) as any;
         }
         (config.headers as any).Authorization = `Bearer ${token}`;
       }
