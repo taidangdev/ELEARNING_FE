@@ -77,3 +77,18 @@ export async function dangKyKhoaHoc(maKhoaHoc: string, taiKhoan: string) {
     };
   }
 }
+export async function themKhoaHoc(payload: any) {
+  try {
+    const res = await api.post("/QuanLyKhoaHoc/ThemKhoaHoc", payload);
+    return {
+      success: true,
+      data: res.data,
+    };
+  } catch (error: any) {
+    console.error("Lỗi thêm khóa học:", error);
+    return {
+      success: false,
+      message: error.response?.data || "Thêm khóa học thất bại",
+    };
+  }
+}

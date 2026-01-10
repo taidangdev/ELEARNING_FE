@@ -10,15 +10,18 @@ export default function Navbar() {
   const pathname = usePathname();
   const [loggedIn, setLoggedIn] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const check = () => {
       const status = isLoggedIn();
       setLoggedIn(status);
       if (status) {
-        const user = getCurrentUser();
-        setUserName(user?.taiKhoan || user?.hoTen || null);
+        const currentUser = getCurrentUser();
+        setUser(currentUser);
+        setUserName(currentUser?.taiKhoan || currentUser?.hoTen || null);
       } else {
+        setUser(null);
         setUserName(null);
       }
     };
@@ -52,6 +55,11 @@ export default function Navbar() {
           <li className="hover:text-indigo-600 transition cursor-pointer">
             <Link href="/courses">Khóa học</Link>
           </li>
+          {user?.maLoaiNguoiDung === "GV" && (
+            <li className="hover:text-indigo-600 transition cursor-pointer font-bold text-indigo-600">
+              <Link href="/admin/add-course">Quản lý</Link>
+            </li>
+          )}
           <li className="hover:text-indigo-600 transition cursor-pointer">
             Giảng viên
           </li>

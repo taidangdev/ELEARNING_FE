@@ -7,6 +7,7 @@ interface RegisterPayload {
   soDT: string; // Viết hoa cả D và T
   maNhom: string; // Mã nhóm (ví dụ: "GP01")
   email: string;
+  maLoaiNguoiDung: string; // Thêm trường loại người dùng (HV/GV)
 }
 
 interface RegisterResponse {

@@ -14,6 +14,7 @@ export default function RegisterPage() {
     email: "",
     soDT: "", // Viết hoa cả D và T
     maNhom: "GP01", // Mã nhóm mặc định
+    maLoaiNguoiDung: "HV", // Mặc định là Học viên
   });
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +84,8 @@ export default function RegisterPage() {
                     </p>
                     {error.toLowerCase().includes("tồn tại") && (
                       <p className="text-red-500 text-xs">
-                        💡 Vui lòng thử với tài khoản, email hoặc số điện thoại khác
+                        💡 Vui lòng thử với tài khoản, email hoặc số điện thoại
+                        khác
                       </p>
                     )}
                   </div>
@@ -223,7 +225,40 @@ export default function RegisterPage() {
                 >
                   <option value="GP01">Nhóm GP01</option>
                   <option value="GP02">Nhóm GP02</option>
+                  <option value="GP03">Nhóm GP03</option>
+                  <option value="GP04">Nhóm GP04</option>
+                  <option value="GP05">Nhóm GP05</option>
+                  <option value="GP06">Nhóm GP06</option>
+                  <option value="GP07">Nhóm GP07</option>
+                  <option value="GP08">Nhóm GP08</option>
+                  <option value="GP09">Nhóm GP09</option>
                 </select>
+              </div>
+
+              {/* Loại người dùng (HV, GV) */}
+              <div>
+                <label
+                  htmlFor="maLoaiNguoiDung"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Bạn là ai? <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="maLoaiNguoiDung"
+                  name="maLoaiNguoiDung"
+                  value={formData.maLoaiNguoiDung}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                           focus:ring-2 focus:ring-indigo-500 focus:border-transparent 
+                           transition outline-none bg-white font-bold text-indigo-700"
+                >
+                  <option value="HV">🧑‍🎓 Học viên</option>
+                  <option value="GV">👨‍🏫 Giáo vụ (Giảng viên)</option>
+                </select>
+                <p className="mt-1 text-[10px] text-gray-500 italic">
+                  * Tài khoản Giáo vụ có quyền quản lý khóa học.
+                </p>
               </div>
 
               {/* Submit Button */}
@@ -257,4 +292,3 @@ export default function RegisterPage() {
     </>
   );
 }
-
