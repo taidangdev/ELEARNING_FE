@@ -47,10 +47,10 @@ export default function Navbar() {
         {/* Menu desktop */}
         <ul className="hidden md:flex gap-8 text-gray-700 font-medium">
           <li className="hover:text-indigo-600 transition cursor-pointer">
-            Trang chủ
+            <Link href="/">Trang chủ</Link>
           </li>
           <li className="hover:text-indigo-600 transition cursor-pointer">
-            Khóa học
+            <Link href="/courses">Khóa học</Link>
           </li>
           <li className="hover:text-indigo-600 transition cursor-pointer">
             Giảng viên

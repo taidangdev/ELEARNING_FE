@@ -48,13 +48,32 @@ export async function getKhoaHocTheoDanhMuc(maDanhMuc: string) {
       const allCourses = await getDanhSachKhoaHoc();
       return Array.isArray(allCourses)
         ? allCourses.filter(
-            (course: any) =>
-              course.danhMucKhoaHoc?.maDanhMucKhoaHoc === maDanhMuc
-          )
+          (course: any) =>
+            course.danhMucKhoaHoc?.maDanhMucKhoaHoc === maDanhMuc
+        )
         : [];
     } catch (filterError) {
       console.error("Lỗi filter khóa học:", filterError);
       return [];
     }
+  }
+}
+
+export async function dangKyKhoaHoc(maKhoaHoc: string, taiKhoan: string) {
+  try {
+    const res = await api.post("/QuanLyKhoaHoc/DangKyKhoaHoc", {
+      maKhoaHoc,
+      taiKhoan,
+    });
+    return {
+      success: true,
+      data: res.data,
+    };
+  } catch (error: any) {
+    console.error("Lỗi đăng ký khóa học:", error);
+    return {
+      success: false,
+      message: error.response?.data || "Đăng ký khóa học thất bại",
+    };
   }
 }
