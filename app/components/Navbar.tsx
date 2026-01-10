@@ -46,10 +46,18 @@ export default function Navbar() {
 
         {/* Menu desktop */}
         <ul className="hidden md:flex gap-8 text-gray-700 font-medium">
-          <li className="hover:text-indigo-600 transition cursor-pointer">Trang chủ</li>
-          <li className="hover:text-indigo-600 transition cursor-pointer">Khóa học</li>
-          <li className="hover:text-indigo-600 transition cursor-pointer">Giảng viên</li>
-          <li className="hover:text-indigo-600 transition cursor-pointer">Liên hệ</li>
+          <li className="hover:text-indigo-600 transition cursor-pointer">
+            Trang chủ
+          </li>
+          <li className="hover:text-indigo-600 transition cursor-pointer">
+            Khóa học
+          </li>
+          <li className="hover:text-indigo-600 transition cursor-pointer">
+            Giảng viên
+          </li>
+          <li className="hover:text-indigo-600 transition cursor-pointer">
+            Liên hệ
+          </li>
         </ul>
 
         {/* Actions */}
@@ -57,9 +65,12 @@ export default function Navbar() {
           {loggedIn ? (
             <>
               {userName && (
-                <span className="hidden md:inline text-sm text-gray-700">
+                <Link
+                  href="/profile"
+                  className="hidden md:inline text-sm text-gray-700 hover:text-indigo-600 transition"
+                >
                   Xin chào, <span className="font-semibold">{userName}</span>
-                </span>
+                </Link>
               )}
               <button
                 onClick={handleLogout}

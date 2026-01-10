@@ -30,9 +30,9 @@ export async function registerUser(payload: RegisterPayload): Promise<RegisterRe
   try {
     // Log payload để debug
     console.log("Payload đang gửi:", payload);
-    
+
     const res = await api.post("/QuanLyNguoiDung/DangKy", payload);
-    
+
     console.log("Response thành công:", res.data);
     return {
       success: true,
@@ -40,21 +40,21 @@ export async function registerUser(payload: RegisterPayload): Promise<RegisterRe
     };
   } catch (error: any) {
     console.error("Lỗi đăng ký:", error);
-    
+
     // Log chi tiết error response
     if (error.response) {
       console.error("Error Response Status:", error.response.status);
       console.error("Error Response Data:", error.response.data);
       console.error("Error Response Headers:", error.response.headers);
     }
-    
+
     // Xử lý lỗi từ API
     let errorMessage = "Đăng ký thất bại. Vui lòng thử lại!";
-    
+
     if (error.response) {
       // Server trả về response với status code
       const responseData = error.response.data;
-      
+
       // Xử lý các trường hợp response data khác nhau
       if (typeof responseData === "string") {
         // Nếu data là string trực tiếp
@@ -76,7 +76,7 @@ export async function registerUser(payload: RegisterPayload): Promise<RegisterRe
       // Lỗi khi setup request
       errorMessage = error.message || errorMessage;
     }
-    
+
     return {
       success: false,
       message: errorMessage,
@@ -87,9 +87,9 @@ export async function registerUser(payload: RegisterPayload): Promise<RegisterRe
 export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
   try {
     console.log("Payload đăng nhập:", payload);
-    
+
     const res = await api.post("/QuanLyNguoiDung/DangNhap", payload);
-    
+
     console.log("Đăng nhập thành công:", res.data);
     return {
       success: true,
@@ -97,19 +97,19 @@ export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
     };
   } catch (error: any) {
     console.error("Lỗi đăng nhập:", error);
-    
+
     // Log chi tiết error response
     if (error.response) {
       console.error("Error Response Status:", error.response.status);
       console.error("Error Response Data:", error.response.data);
     }
-    
+
     // Xử lý lỗi từ API
     let errorMessage = "Đăng nhập thất bại. Vui lòng thử lại!";
-    
+
     if (error.response) {
       const responseData = error.response.data;
-      
+
       if (typeof responseData === "string") {
         errorMessage = responseData;
       } else if (responseData && typeof responseData === "object") {
@@ -126,7 +126,7 @@ export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
     } else {
       errorMessage = error.message || errorMessage;
     }
-    
+
     return {
       success: false,
       message: errorMessage,
@@ -134,3 +134,13 @@ export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
   }
 }
 
+
+export async function getThongTinTaiKhoan(): Promise<any> {
+  try {
+    const res = await api.post("/QuanLyNguoiDung/ThongTinNguoiDung");
+    return res.data;
+  } catch (error: any) {
+    console.error("Lỗi lấy thông tin tài khoản:", error);
+    return null;
+  }
+}
