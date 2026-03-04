@@ -13,22 +13,21 @@ export default function RegisterPage() {
     matKhau: "",
     hoTen: "",
     email: "",
-    soDT: "", 
+    soDT: "",
     maNhom: "GP01", // Mã nhóm mặc định
-    maLoaiNguoiDung: "HV", // Mặc định 
   });
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    
+
     if (error) setError("");
   };
 
@@ -234,32 +233,6 @@ export default function RegisterPage() {
                   <option value="GP08">Nhóm GP08</option>
                   <option value="GP09">Nhóm GP09</option>
                 </select>
-              </div>
-
-              {/* Loại người dùng (HV, GV) */}
-              <div>
-                <label
-                  htmlFor="maLoaiNguoiDung"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Bạn là ai? <span className="text-red-500">*</span>
-                </label>
-                <select
-                  id="maLoaiNguoiDung"
-                  name="maLoaiNguoiDung"
-                  value={formData.maLoaiNguoiDung}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                           focus:ring-2 focus:ring-indigo-500 focus:border-transparent 
-                           transition outline-none bg-white font-bold text-indigo-700"
-                >
-                  <option value="HV">🧑‍🎓 Học viên</option>
-                  <option value="GV">👨‍🏫 Giáo vụ (Giảng viên)</option>
-                </select>
-                <p className="mt-1 text-[10px] text-gray-500 italic">
-                  * Tài khoản Giáo vụ có quyền quản lý khóa học.
-                </p>
               </div>
 
               {/* Submit Button */}

@@ -56,8 +56,8 @@ export default function Navbar() {
             <Link href="/courses">Khóa học</Link>
           </li>
           {user?.maLoaiNguoiDung === "GV" && (
-            <li className="hover:text-indigo-600 transition cursor-pointer font-bold text-indigo-600">
-              <Link href="/admin/add-course">Quản lý</Link>
+            <li className="hover:text-indigo-600 transition cursor-pointer">
+              <Link href="/admin">Quản lý</Link>
             </li>
           )}
           <li className="hover:text-indigo-600 transition cursor-pointer">
@@ -70,7 +70,6 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
-          
           {loggedIn ? (
             <>
               {userName && (
@@ -102,7 +101,6 @@ export default function Navbar() {
               >
                 Đăng ký
               </Link>
-              
             </>
           )}
 
@@ -110,7 +108,6 @@ export default function Navbar() {
           <div className="md:hidden text-2xl cursor-pointer text-indigo-700">
             ☰
           </div>
-          
         </div>
       </div>
     </nav>

@@ -12,6 +12,20 @@ export async function getDanhSachKhoaHoc() {
   }
 }
 
+export async function getDanhSachKhoaHocPhanTrang(page: number, pageSize: number, tenKhoaHoc: string = "") {
+  try {
+    let url = `/QuanLyKhoaHoc/LayDanhSachKhoaHoc_PhanTrang?page=${page}&pageSize=${pageSize}&MaNhom=GP01`;
+    if (tenKhoaHoc) {
+      url += `&tenKhoaHoc=${encodeURIComponent(tenKhoaHoc)}`;
+    }
+    const res = await api.get(url);
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi lấy danh sách khóa học phân trang:", error);
+    return null;
+  }
+}
+
 export async function getThongTinKhoaHoc(maKhoaHoc: string) {
   try {
     const res = await api.get(
@@ -36,14 +50,13 @@ export async function getDanhMucKhoaHoc() {
 
 export async function getKhoaHocTheoDanhMuc(maDanhMuc: string) {
   try {
-    //  endpoint với các biến 
     const res = await api.get(
       `/QuanLyKhoaHoc/LayKhoaHocTheoDanhMuc?maDanhMuc=${maDanhMuc}&MaNhom=GP01`
     );
     return res.data;
   } catch (error: any) {
     console.error("Lỗi lấy khóa học theo danh mục:", error);
-   
+
     try {
       const allCourses = await getDanhSachKhoaHoc();
       return Array.isArray(allCourses)
@@ -77,6 +90,7 @@ export async function dangKyKhoaHoc(maKhoaHoc: string, taiKhoan: string) {
     };
   }
 }
+
 export async function themKhoaHoc(payload: any) {
   try {
     const res = await api.post("/QuanLyKhoaHoc/ThemKhoaHoc", payload);
@@ -89,6 +103,44 @@ export async function themKhoaHoc(payload: any) {
     return {
       success: false,
       message: error.response?.data || "Thêm khóa học thất bại",
+    };
+  }
+}
+
+export async function xoaKhoaHoc(maKhoaHoc: string) {
+  try {
+    const res = await api.delete(`/QuanLyKhoaHoc/XoaKhoaHoc?MaKhoaHoc=${maKhoaHoc}`);
+    return {
+      success: true,
+      data: res.data,
+    };
+  } catch (error: any) {
+    console.error("Lỗi xóa khóa học:", error);
+    let message = "Xóa khóa học thất bại";
+    if (typeof error.response?.data === 'string') message = error.response.data;
+    else if (error.response?.data?.content) message = error.response.data.content;
+    return {
+      success: false,
+      message: message,
+    };
+  }
+}
+
+export async function capNhatKhoaHoc(payload: any) {
+  try {
+    const res = await api.put("/QuanLyKhoaHoc/CapNhatKhoaHoc", payload);
+    return {
+      success: true,
+      data: res.data,
+    };
+  } catch (error: any) {
+    console.error("Lỗi cập nhật khóa học:", error);
+    let message = "Cập nhật khóa học thất bại";
+    if (typeof error.response?.data === 'string') message = error.response.data;
+    else if (error.response?.data?.content) message = error.response.data.content;
+    return {
+      success: false,
+      message: message,
     };
   }
 }

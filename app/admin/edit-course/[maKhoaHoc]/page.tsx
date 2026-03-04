@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { getDanhMucKhoaHoc, themKhoaHoc } from "../../services/quanglykhoahoc";
-import { getCurrentUser, isLoggedIn } from "../../services/authClient";
+import { useRouter, useParams } from "next/navigation";
+import {
+  getDanhMucKhoaHoc,
+  capNhatKhoaHoc,
+  getThongTinKhoaHoc,
+} from "../../../services/quanglykhoahoc";
+import { getCurrentUser, isLoggedIn } from "../../../services/authClient";
 import Link from "next/link";
 
-export default function AddCoursePage() {
+export default function EditCoursePage() {
   const router = useRouter();
+  const params = useParams();
+  const maKhoaHocParam = params.maKhoaHoc as string;
+
   const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,11 +31,8 @@ export default function AddCoursePage() {
     hinhAnh: "",
     maNhom: "GP01",
     maDanhMucKhoaHoc: "",
-    ngayTao: new Date()
-      .toLocaleDateString("pt-br")
-      .split("/")
-      .reverse()
-      .join("-"), // YYYY-MM-DD
+    ngayTao: "",
+    taiKhoanNguoiTao: "",
   });
 
   useEffect(() => {
@@ -47,28 +51,44 @@ export default function AddCoursePage() {
     }
     setUser(currentUser);
 
-    // 2. Lấy danh mục khóa học cho select box
-    const fetchCategories = async () => {
+    // 2. Fetch danh mục & thông tin khóa học
+    const fetchInitialData = async () => {
       try {
-        const data = await getDanhMucKhoaHoc();
-        setCategories(data);
-        if (data.length > 0) {
-          setFormData((prev) => ({
-            ...prev,
-            maDanhMucKhoaHoc: data[0].maDanhMuc,
-          }));
+        const cats = await getDanhMucKhoaHoc();
+        setCategories(cats);
+
+        if (maKhoaHocParam) {
+          const courseInfo = await getThongTinKhoaHoc(maKhoaHocParam);
+          if (courseInfo) {
+            setFormData({
+              maKhoaHoc: courseInfo.maKhoaHoc,
+              tenKhoaHoc: courseInfo.tenKhoaHoc,
+              biDanh: courseInfo.biDanh || "",
+              moTa: courseInfo.moTa || "",
+              luotXem: courseInfo.luotXem || 0,
+              danhGia: courseInfo.danhGia || 0,
+              hinhAnh: courseInfo.hinhAnh || "",
+              maNhom: courseInfo.maNhom || "GP01",
+              maDanhMucKhoaHoc:
+                courseInfo.danhMucKhoaHoc?.maDanhMucKhoahoc ||
+                courseInfo.danhMucKhoaHoc?.maDanhMuc ||
+                (cats.length > 0 ? cats[0].maDanhMuc : ""),
+              ngayTao: courseInfo.ngayTao || "",
+              taiKhoanNguoiTao:
+                courseInfo.nguoiTao?.taiKhoan || currentUser.taiKhoan,
+            });
+          }
         }
       } catch (error) {
-        console.error("Lỗi tải danh mục:", error);
+        console.error("Lỗi lấy dữ liệu:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchCategories();
-  }, [router]);
+    fetchInitialData();
+  }, [router, maKhoaHocParam]);
 
-  // Tự động tạo bí danh khi nhập tên khóa học
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
     const slug = name
@@ -103,18 +123,12 @@ export default function AddCoursePage() {
 
     setIsSubmitting(true);
     try {
-      // Payload theo yêu cầu: thêm taiKhoanNguoiTao từ user hiện tại
-      const payload = {
-        ...formData,
-        taiKhoanNguoiTao: user.taiKhoan,
-      };
-
-      const res = await themKhoaHoc(payload);
+      const res = await capNhatKhoaHoc(formData);
       if (res.success) {
-        alert("Thêm khóa học thành công!");
-        router.push("/courses");
+        alert("Cập nhật khóa học thành công!");
+        router.push("/admin");
       } else {
-        alert("Lỗi: " + (res.message || "Không thể thêm khóa học."));
+        alert("Lỗi: " + (res.message || "Không thể cập nhật khóa học."));
       }
     } catch (error) {
       alert("Đã có lỗi xảy ra. Vui lòng thử lại!");
@@ -126,7 +140,7 @@ export default function AddCoursePage() {
   if (isLoading) {
     return (
       <div className="pt-32 text-center font-bold">
-        Đang kiểm tra quyền truy cập...
+        Đang tải thông tin khóa học...
       </div>
     );
   }
@@ -142,25 +156,24 @@ export default function AddCoursePage() {
             ← Quay lại
           </Link>
           <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight">
-            Thêm Khóa Học Mới
+            Chỉnh Sửa Khóa Học
           </h1>
         </div>
 
         <div className="bg-white rounded-3xl p-8 shadow-2xl shadow-slate-200 border border-slate-100">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Mã khóa học */}
+              {/* Mã khóa học (Không thể sửa) */}
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2">
-                  Mã khóa học *
+                  Mã khóa học * (Không thể đổi)
                 </label>
                 <input
                   type="text"
                   name="maKhoaHoc"
                   value={formData.maKhoaHoc}
-                  onChange={handleChange}
-                  placeholder="Ví dụ: NODEJS01"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  disabled
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 cursor-not-allowed focus:outline-none transition"
                   required
                 />
               </div>
@@ -175,8 +188,7 @@ export default function AddCoursePage() {
                   name="tenKhoaHoc"
                   value={formData.tenKhoaHoc}
                   onChange={handleNameChange}
-                  placeholder="Ví dụ: Lập trình NodeJS nâng cao"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                   required
                 />
               </div>
@@ -190,8 +202,11 @@ export default function AddCoursePage() {
                   name="maDanhMucKhoaHoc"
                   value={formData.maDanhMucKhoaHoc}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                 >
+                  <option value="" disabled>
+                    -- Chọn danh mục --
+                  </option>
                   {categories.map((cat: any) => (
                     <option key={cat.maDanhMuc} value={cat.maDanhMuc}>
                       {cat.tenDanhMuc}
@@ -209,7 +224,7 @@ export default function AddCoursePage() {
                   name="maNhom"
                   value={formData.maNhom}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                 >
                   <option value="GP01">GP01</option>
                   <option value="GP02">GP02</option>
@@ -228,15 +243,32 @@ export default function AddCoursePage() {
                 <label className="block text-sm font-bold text-slate-700 mb-2">
                   Đường dẫn hình ảnh (URL) *
                 </label>
-                <input
-                  type="text"
-                  name="hinhAnh"
-                  value={formData.hinhAnh}
-                  onChange={handleChange}
-                  placeholder="https://example.com/image.jpg"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                  required
-                />
+                <div className="flex gap-4 items-start">
+                  <div className="w-16 h-16 rounded-lg bg-slate-100 overflow-hidden shrink-0">
+                    {formData.hinhAnh ? (
+                      <img
+                        src={formData.hinhAnh}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e: any) =>
+                          (e.target.src = "https://picsum.photos/100")
+                        }
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-300">
+                        🖼️
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    name="hinhAnh"
+                    value={formData.hinhAnh}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
+                    required
+                  />
+                </div>
               </div>
 
               {/* Mô tả */}
@@ -249,23 +281,22 @@ export default function AddCoursePage() {
                   rows={4}
                   value={formData.moTa}
                   onChange={handleChange}
-                  placeholder="Mô tả ngắn gọn về khóa học..."
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                 ></textarea>
               </div>
             </div>
 
             <div className="pt-4 border-t border-slate-100 flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="text-sm text-slate-500">
-                👤 Đang đăng bởi:{" "}
-                <span className="font-bold text-indigo-600">{user?.hoTen}</span>
+                👤 Cập nhật bởi:{" "}
+                <span className="font-bold text-amber-600">{user?.hoTen}</span>
               </div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-2xl font-black text-lg hover:brightness-110 active:scale-95 transition shadow-xl shadow-indigo-100 disabled:opacity-50"
+                className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-black text-lg hover:brightness-110 active:scale-95 transition shadow-xl shadow-amber-100 disabled:opacity-50"
               >
-                {isSubmitting ? "Đang xử lý..." : "TẠO KHÓA HỌC NGAY"}
+                {isSubmitting ? "Đang xử lý..." : "CẬP NHẬT GHI NHẬN"}
               </button>
             </div>
           </form>
