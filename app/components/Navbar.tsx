@@ -61,7 +61,7 @@ export default function Navbar() {
             </li>
           )}
           <li className="hover:text-indigo-600 transition cursor-pointer">
-            Giảng viên
+            <Link href="/instructors">Giảng viên</Link>
           </li>
           <li className="hover:text-indigo-600 transition cursor-pointer">
             Liên hệ

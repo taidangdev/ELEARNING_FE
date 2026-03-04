@@ -65,3 +65,13 @@ export async function getThongTinNguoiDungTaiKhoan(taiKhoan: string) {
         return null;
     }
 }
+
+export async function getDanhSachTatCaNguoiDung(maNhom: string = "GP01") {
+    try {
+        const res = await api.get(`/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${maNhom}`);
+        return res.data;
+    } catch (error: any) {
+        console.error("Lỗi lấy danh sách người dùng:", error);
+        return [];
+    }
+}
