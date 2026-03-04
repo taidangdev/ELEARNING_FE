@@ -191,10 +191,16 @@ export default function AdminUsersPage() {
                             : "Học viên"}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right space-x-3">
+                      <td className="px-6 py-4 text-right space-x-2">
+                        <Link
+                          href={`/admin/enrollment/user/${user.taiKhoan}`}
+                          className="inline-block px-3 py-2 bg-emerald-50 text-emerald-600 rounded-lg font-semibold hover:bg-emerald-100 transition"
+                        >
+                          Ghi danh
+                        </Link>
                         <Link
                           href={`/admin/users/edit-user/${user.taiKhoan}`}
-                          className="inline-block px-4 py-2 bg-amber-50 text-amber-600 rounded-lg font-semibold hover:bg-amber-100 transition"
+                          className="inline-block px-3 py-2 bg-amber-50 text-amber-600 rounded-lg font-semibold hover:bg-amber-100 transition"
                         >
                           Sửa
                         </Link>
@@ -202,7 +208,7 @@ export default function AdminUsersPage() {
                           onClick={() =>
                             handleDelete(user.taiKhoan, user.hoTen)
                           }
-                          className="px-4 py-2 bg-red-50 text-red-600 rounded-lg font-semibold hover:bg-red-100 transition"
+                          className="px-3 py-2 bg-red-50 text-red-600 rounded-lg font-semibold hover:bg-red-100 transition"
                         >
                           Xóa
                         </button>
