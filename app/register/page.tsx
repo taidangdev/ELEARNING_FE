@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { registerUser } from "../services/auth";
-import EnrollButton from "@/app/EnrollButton/EnrollButton";
 
 export default function RegisterPage() {
   const router = useRouter();
