@@ -1,5 +1,5 @@
-"use client";
 
+"use client"; 
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -288,6 +288,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
           </div>
         </div>
       </div>
+
     </main>
   );
 }

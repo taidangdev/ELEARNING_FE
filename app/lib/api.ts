@@ -1,29 +1,28 @@
-import axios from "axios";
+import axios, { InternalAxiosRequestConfig } from "axios";
 
 export const api = axios.create({
-  // Sử dụng biến môi trường cho baseURL
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 
   headers: {
-    accept: "application/json",
-    // Sử dụng biến môi trường cho Token
-    TokenCybersoft: process.env.NEXT_PUBLIC_CYBERSOFT_TOKEN,
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    TokenCybersoft:
+      process.env.NEXT_PUBLIC_CYBERSOFT_TOKEN || "",
   },
 });
 
-if (typeof window !== "undefined") {
-  api.interceptors.request.use((config) => {
-    try {
+// REQUEST INTERCEPTOR
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    if (typeof window !== "undefined") {
       const token = localStorage.getItem("accessToken");
+
       if (token) {
-        if (!config.headers) {
-          config.headers = (config.headers || {}) as any;
-        }
-        (config.headers as any).Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
-    } catch {
-      // ignore
     }
+
     return config;
-  });
-}
+  },
+  (error) => Promise.reject(error)
+);

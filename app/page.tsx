@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { isLoggedIn, getCurrentUser } from "./services/authClient";
+import Header from "./components/Header";
+import FooterCounter from "./components/FooterCounter";
 
 export default function HomePage() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -17,6 +19,7 @@ export default function HomePage() {
   }, []);
   return (
     <main className="min-h-screen bg-white">
+      <Header />
       {/* Hero Section */}
       <section className="pt-40 pb-20 px-6">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -157,6 +160,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <FooterCounter />
     </main>
   );
 }
