@@ -8,6 +8,8 @@ import {
 } from "../../services/quanglykhoahoc";
 import { getCurrentUser, isLoggedIn } from "../../services/authClient";
 import SafeImage from "../../services/components/SafeImage";
+
+
 import Link from "next/link";
 
 interface CourseDetailPageProps {

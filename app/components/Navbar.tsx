@@ -70,6 +70,7 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
+          
           {loggedIn ? (
             <>
               {userName && (
@@ -101,6 +102,7 @@ export default function Navbar() {
               >
                 Đăng ký
               </Link>
+              
             </>
           )}
 
@@ -108,6 +110,7 @@ export default function Navbar() {
           <div className="md:hidden text-2xl cursor-pointer text-indigo-700">
             ☰
           </div>
+          
         </div>
       </div>
     </nav>

@@ -12,41 +12,46 @@ interface CategoryMenuProps {
   categories: Category[];
 }
 
-export default function CategoryMenu({ categories }: CategoryMenuProps) {
+export default function CategoryMenu({
+  categories,
+}: CategoryMenuProps) {
   const searchParams = useSearchParams();
-  const activeCategory = searchParams.get("category");
 
-  // Đảm bảo categories là array
-  const categoriesList = Array.isArray(categories) ? categories : [];
+  const activeCategory = searchParams.get("keyword");
+
+  const categoriesList = Array.isArray(categories)
+    ? categories
+    : [];
 
   return (
     <div className="mb-8">
       <div className="flex flex-wrap gap-3 justify-center items-center">
-        {/* Nút "Tất cả" */}
+
         <Link
           href="/"
-          className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
+          className={`px-6 py-2 rounded-lg font-semibold ${
             !activeCategory
-              ? "bg-indigo-600 text-white shadow-md"
-              : "bg-white text-gray-700 hover:bg-gray-100 shadow-sm"
+              ? "bg-indigo-600 text-white"
+              : "bg-white text-gray-700"
           }`}
         >
           Tất cả
         </Link>
 
-        {/* Các nút danh mục */}
         {categoriesList.map((category, index) => {
-          const isActive = activeCategory === category.maDanhMuc;
-          const uniqueKey = category.maDanhMuc || `category-${index}-${category.tenDanhMuc}`;
-          
+          const isActive =
+            activeCategory === category.tenDanhMuc;
+
           return (
             <Link
-              key={uniqueKey}
-              href={`/?category=${category.maDanhMuc}`}
-              className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
+              key={category.maDanhMuc || index}
+              href={`/seachList?keyword=${encodeURIComponent(
+  category.tenDanhMuc
+)}`}
+              className={`px-6 py-2 rounded-lg font-semibold ${
                 isActive
-                  ? "bg-indigo-600 text-white shadow-md"
-                  : "bg-white text-gray-700 hover:bg-gray-100 shadow-sm"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-white text-gray-700"
               }`}
             >
               {category.tenDanhMuc}
@@ -57,4 +62,3 @@ export default function CategoryMenu({ categories }: CategoryMenuProps) {
     </div>
   );
 }
-

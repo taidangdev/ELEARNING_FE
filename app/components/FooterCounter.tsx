@@ -12,22 +12,26 @@ function Counter({ end, duration = 2000 }: CounterProps) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    let startTime: number | null = null;
+    // tổng số lần nhảy số
+    const totalSeconds = Math.floor(duration / 10);
 
-    const animate = (time: number) => {
-      if (!startTime) startTime = time;
+    // mỗi lần tăng bao nhiêu
+    const step = Math.ceil(end / totalSeconds);
 
-      const progress = Math.min((time - startTime) / duration, 1);
-      const value = Math.floor(progress * end);
+    let current = 0;
 
-      setCount(value);
+    const timer = setInterval(() => {
+      current += step;
 
-      if (progress < 1) {
-        requestAnimationFrame(animate);
+      if (current >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(current);
       }
-    };
+    }, 1000); // ✅ đúng 1 giây
 
-    requestAnimationFrame(animate);
+    return () => clearInterval(timer);
   }, [end, duration]);
 
   return <span>{count.toLocaleString()}</span>;

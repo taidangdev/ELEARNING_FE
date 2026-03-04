@@ -4,6 +4,7 @@ import React from "react";
 import Slider from "react-slick";
 import Image from "next/image";
 
+
 export default function Header() {
 
   const settings = {

@@ -36,14 +36,14 @@ export async function getDanhMucKhoaHoc() {
 
 export async function getKhoaHocTheoDanhMuc(maDanhMuc: string) {
   try {
-    // Thử endpoint với các biến thể khác nhau
+    //  endpoint với các biến 
     const res = await api.get(
       `/QuanLyKhoaHoc/LayKhoaHocTheoDanhMuc?maDanhMuc=${maDanhMuc}&MaNhom=GP01`
     );
     return res.data;
   } catch (error: any) {
     console.error("Lỗi lấy khóa học theo danh mục:", error);
-    // Nếu API lỗi (404, 400, ...), filter từ danh sách tất cả khóa học
+   
     try {
       const allCourses = await getDanhSachKhoaHoc();
       return Array.isArray(allCourses)

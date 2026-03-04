@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { registerUser } from "../services/auth";
+import EnrollButton from "@/app/EnrollButton/EnrollButton";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,9 +13,9 @@ export default function RegisterPage() {
     matKhau: "",
     hoTen: "",
     email: "",
-    soDT: "", // Viết hoa cả D và T
+    soDT: "", 
     maNhom: "GP01", // Mã nhóm mặc định
-    maLoaiNguoiDung: "HV", // Mặc định là Học viên
+    maLoaiNguoiDung: "HV", // Mặc định 
   });
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +28,7 @@ export default function RegisterPage() {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
+    
     if (error) setError("");
   };
 
